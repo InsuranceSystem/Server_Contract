@@ -41,12 +41,12 @@ public class ContractServer extends UnicastRemoteObject implements Contract_Serv
 		}
 	}
 	@Override
-	public PaymentList getPaymentList() {
+	public PaymentList getPaymentList() throws RemoteException{
 		return PaymentList;
 	}
 
 	@Override
-	public ContractList getContractList() {
+	public ContractList getContractList() throws RemoteException{
 		return ContractList;
 	}
 	
