@@ -1,4 +1,4 @@
-package server;
+
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import Contract.ContractListImpl;
 import Contract.PaymentListImpl;
+import Interface.Contract_ServerIF;
 import Contract.ContractList;
 import Contract.PaymentList;
 
