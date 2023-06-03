@@ -14,19 +14,16 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
+import Dao.PaymentDao;
+
 public class PaymentListImpl implements PaymentList, Remote{
 	private ArrayList<Payment> paymentList;
+	private PaymentDao paymentDao;
 	public Payment m_Payment;
 
-	public PaymentListImpl(String paymentFileName) throws ParseException, IOException {
-		BufferedReader paymentFile = new BufferedReader(new FileReader(paymentFileName));
-		this.paymentList = new ArrayList<Payment>();
-		while (paymentFile.ready()) {
-			Payment payment = makePayment(paymentFile.readLine());
-			if (payment != null)
-				this.paymentList.add(payment);
-		}
-		paymentFile.close();
+	public PaymentListImpl() throws Exception {
+		this.paymentDao = new PaymentDao();
+		this.paymentList = paymentDao.retrieveAll();
 	}
 
 	public static LocalDate stringToDate(String dateString) {
@@ -38,52 +35,41 @@ public class PaymentListImpl implements PaymentList, Remote{
 
 	}
 
-	public Payment makePayment(String paymentInfo) throws ParseException {
-		Payment payment = new Payment();
-
-		StringTokenizer stringTokenizer = new StringTokenizer(paymentInfo);
-		payment.setCustomerID(stringTokenizer.nextToken());
-		payment.setInsuranceID(stringTokenizer.nextToken());
-		payment.setStringDateOfPayment(stringTokenizer.nextToken());
-		LocalDate date = stringToDate(payment.getStringDateOfPayment());
-		payment.setDateOfPayment(date);
-		payment.setWhetherPayment(Boolean.parseBoolean(stringTokenizer.nextToken()));
-		return payment;
-
-	}
-
 	public void finalize() throws Throwable {
 
 	}
 
-	public boolean add(String paymentInfo) throws ParseException, IOException {
-		if (this.paymentList.add(new Payment())) {
-			updateFile("data/Payment.txt");
-			return true;
-		}
+//	public boolean add(String paymentInfo) throws ParseException, IOException {
+//		if (this.paymentList.add(new Payment())) {
+//			updateFile("data/Payment.txt");
+//			return true;
+//		}
+//		return false;
+//	}
+
+//	private void updateFile(String string) throws IOException {
+//		File file = new File(string);
+//		if (!file.exists())
+//			file.createNewFile();
+//		String paymentInfo = "";
+//		if (!paymentList.isEmpty()) {
+//			paymentInfo = paymentList.get(0).toString();
+//		}
+//
+//		BufferedWriter paymentFileWriter = new BufferedWriter(new FileWriter(file));
+//		for (int i = 1; i < this.paymentList.size(); i++) {
+//			paymentInfo = paymentInfo + "\r\n" + paymentList.get(i).toString();
+//		}
+//
+//		paymentFileWriter.write(paymentInfo);
+//		paymentFileWriter.flush();
+//		paymentFileWriter.close();
+//
+//	}
+
+	public boolean delete() {
 		return false;
 	}
-
-	private void updateFile(String string) throws IOException {
-		File file = new File(string);
-		if (!file.exists())
-			file.createNewFile();
-		String paymentInfo = "";
-		if (!paymentList.isEmpty()) {
-			paymentInfo = paymentList.get(0).toString();
-		}
-
-		BufferedWriter paymentFileWriter = new BufferedWriter(new FileWriter(file));
-		for (int i = 1; i < this.paymentList.size(); i++) {
-			paymentInfo = paymentInfo + "\r\n" + paymentList.get(i).toString();
-		}
-
-		paymentFileWriter.write(paymentInfo);
-		paymentFileWriter.flush();
-		paymentFileWriter.close();
-
-	}
-
 
 	public ArrayList<Payment> retrieve() throws Exception {
 		if (this.paymentList.size() == 0)
@@ -101,6 +87,17 @@ public class PaymentListImpl implements PaymentList, Remote{
 		return customerPayment;
 	}
 
+	public ArrayList<Payment> retreiveCustomerInsurancePayment(String customerID, String insuranceID) {
+		ArrayList<Payment> customerPayment = new ArrayList<Payment>();
+		for (int i = 0; i < this.paymentList.size(); i++) {
+			if (paymentList.get(i).getCustomerID().equals(customerID)
+					&& paymentList.get(i).getInsuranceID().equals(insuranceID)) {
+				customerPayment.add(paymentList.get(i));
+			}
+		}
+		return customerPayment;
+	}
+
 	public ArrayList<String> retreiveDateStatusById(String customerID, String insuranceId) {
 		ArrayList<String> dateAndStatus = new ArrayList<String>();
 		for (int i = 0; i < this.paymentList.size(); i++) {
@@ -112,18 +109,19 @@ public class PaymentListImpl implements PaymentList, Remote{
 		return dateAndStatus;
 	}
 
-	public boolean updateCancellation(String customerId, String insuranceId) throws IOException {
+	public Boolean updateWhetherPayment(String customerId, String insuranceId) throws IOException {
 		for (int i = 0; i < this.paymentList.size(); i++) {
 			if (this.paymentList.get(i).getCustomerID().equals(customerId)
 					&& paymentList.get(i).getInsuranceID().equals(insuranceId)) {
-				this.paymentList.get(i).updatePayment();
-				updateFile("data/Payment.txt");
 
-				return true;
+				boolean newWhetherPayment = !this.paymentList.get(i).isWhetherPayment();
+				if (paymentDao.updateWhetherPayment(customerId, insuranceId, newWhetherPayment)) {
+					this.paymentList.get(i).setWhetherPayment(newWhetherPayment); // paymentList 업데이트
+					return true;
+				}
 			}
 		}
-
-		return false; // exception
+		return false;
 	}
 
 	public ArrayList<String> retreiveUnpaidCustomerId() {
@@ -142,10 +140,20 @@ public class PaymentListImpl implements PaymentList, Remote{
 		return unPaidCustomerId;
 	}
 
-	public boolean update() throws IOException {
-		updateFile("data/Payment.txt");
-		return true;
+	public boolean update(Payment updatedPayment) throws IOException {
+		for (int i = 0; i < this.paymentList.size(); i++) {
+			Payment payment = this.paymentList.get(i);
+			if (payment.match(updatedPayment.getInsuranceID(), updatedPayment.getCustomerID())) {
+				this.paymentList.set(i, updatedPayment);
+				paymentDao.update(updatedPayment);
+				return true;
+			}
+		}
+		return false;
 	}
+	
+
 
 }
 // end PaymentListImpl
+
