@@ -5,6 +5,8 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import Contract.ContractListImpl;
 import Contract.PaymentListImpl;
@@ -26,9 +28,9 @@ public class ContractServer extends UnicastRemoteObject implements Contract_Serv
 	
 	public static void main(String[] args) throws Exception {
 		try {
-			ContractServer server = new ContractServer();
-			Naming.rebind("ContractServer", server);		
-
+			Registry registry = LocateRegistry.createRegistry(1600);	
+			ContractServer server = new ContractServer();		
+			registry.rebind("ContractServer", server);	
 			PaymentList = new PaymentListImpl();
 			ContractList = new ContractListImpl();
 					
