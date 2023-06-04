@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import Dao.ContractDao;
+import Interface.ContractList;
 
 public class ContractListImpl implements ContractList, Remote{
 

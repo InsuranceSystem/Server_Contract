@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.StringTokenizer;
 
 import Dao.PaymentDao;
+import Interface.PaymentList;
 
 public class PaymentListImpl implements PaymentList, Remote {
 	private ArrayList<Payment> paymentList;
@@ -109,7 +110,7 @@ public class PaymentListImpl implements PaymentList, Remote {
 		return dateAndStatus;
 	}
 
-	public Boolean updateWhetherPayment(String customerId, String insuranceId) throws IOException {
+	public boolean updateWhetherPayment(String customerId, String insuranceId) throws IOException {
 		for (int i = 0; i < this.paymentList.size(); i++) {
 			if (this.paymentList.get(i).getCustomerID().equals(customerId)
 					&& paymentList.get(i).getInsuranceID().equals(insuranceId)) {
