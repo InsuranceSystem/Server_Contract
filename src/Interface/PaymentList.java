@@ -6,7 +6,6 @@ import java.rmi.RemoteException;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-import Contract.Payment;
 
 public interface PaymentList extends Remote{
 

@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import Contract.Payment;
+import Interface.Payment;
 
 public class PaymentDao extends Dao {
 

@@ -1,4 +1,4 @@
-package Contract;
+package ListImpl;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import Dao.ContractDao;
+import Interface.Contract;
 import Interface.ContractList;
 
 public class ContractListImpl implements ContractList, Remote{

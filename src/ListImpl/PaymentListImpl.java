@@ -1,5 +1,5 @@
 
-package Contract;
+package ListImpl;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.StringTokenizer;
 
 import Dao.PaymentDao;
+import Interface.Payment;
 import Interface.PaymentList;
 
 public class PaymentListImpl implements PaymentList, Remote {
