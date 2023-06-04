@@ -16,7 +16,7 @@ import java.util.StringTokenizer;
 
 import Dao.PaymentDao;
 
-public class PaymentListImpl implements PaymentList, Remote{
+public class PaymentListImpl implements PaymentList, Remote {
 	private ArrayList<Payment> paymentList;
 	private PaymentDao paymentDao;
 	public Payment m_Payment;
@@ -39,13 +39,13 @@ public class PaymentListImpl implements PaymentList, Remote{
 
 	}
 
-//	public boolean add(String paymentInfo) throws ParseException, IOException {
-//		if (this.paymentList.add(new Payment())) {
-//			updateFile("data/Payment.txt");
-//			return true;
-//		}
-//		return false;
-//	}
+	public boolean add(String paymentInfo) throws ParseException, IOException {
+		if (this.paymentList.add(new Payment())) {
+
+			return true;
+		}
+		return false;
+	}
 
 //	private void updateFile(String string) throws IOException {
 //		File file = new File(string);
@@ -151,9 +151,7 @@ public class PaymentListImpl implements PaymentList, Remote{
 		}
 		return false;
 	}
-	
 
 
 }
 // end PaymentListImpl
-
