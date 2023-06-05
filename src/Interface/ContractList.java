@@ -17,13 +17,13 @@ public interface ContractList extends Remote{
 
 	ArrayList<Contract> retrieve() throws Exception ,RemoteException;
 
-	boolean updateCancellation(String customerId, String insuranceId) throws IOException ,RemoteException, DaoException;
+	boolean updateCancellation(String customerId, String insuranceId) throws IOException, RemoteException, DaoException;
 
-//
-//	void setResurrectFromCustomer(Customer customer);
-//
-//
-//	void setMaturityFromCustomer(Customer customer);
+
+	void setResurrectFromCustomer(String customerID) throws RemoteException, DaoException;
+
+
+	void setMaturityFromCustomer(String customerID) throws RemoteException, DaoException;
 //	
 //	void setWheaterPaymentFromCustomer(Customer customer);
 

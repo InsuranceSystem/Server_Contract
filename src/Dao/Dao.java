@@ -11,7 +11,7 @@ public class Dao {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			connect = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/insurance?serverTimezone=UTC&useSSL=false", "root", "sso8690@");
+					"jdbc:mysql://localhost:3306/counsel", "root", "1357");
 		} catch (ClassNotFoundException e) {
 			throw new Exception("JDBC 드라이버를 찾을 수 없습니다.", e);
 		} catch (SQLException e) {
