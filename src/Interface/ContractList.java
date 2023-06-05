@@ -6,6 +6,8 @@ import java.rmi.RemoteException;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+import Exception.DaoException;
+
 
 
 public interface ContractList extends Remote{
@@ -15,7 +17,7 @@ public interface ContractList extends Remote{
 
 	ArrayList<Contract> retrieve() throws Exception ,RemoteException;
 
-	boolean updateCancellation(String customerId, String insuranceId) throws IOException ,RemoteException;
+	boolean updateCancellation(String customerId, String insuranceId) throws IOException ,RemoteException, DaoException;
 
 //
 //	void setResurrectFromCustomer(Customer customer);

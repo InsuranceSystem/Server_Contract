@@ -7,12 +7,19 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import Exception.DaoException;
 import Interface.Payment;
+
 
 public class PaymentDao extends Dao {
 
 	public PaymentDao() throws Exception {
-		super.connect();
+        try {
+            super.connect();
+        } catch (Exception e) {
+            System.out.println("데이터베이스 연결에 실패했습니다." + e.getMessage());
+            System.out.println("DAO Exception 발생한 메서드: " + ((DaoException) e).getDaoMethodName());
+        }
 	}
 
 	public void create(Payment payment) {
@@ -148,5 +155,4 @@ public class PaymentDao extends Dao {
 
 		return payment;
 	}
-
 }
