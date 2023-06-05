@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -88,7 +89,7 @@ public class ContractListImpl implements ContractList, Remote {
 		return null;
 	}
 
-	public boolean updateCancellation(String customerId, String insuranceId) throws IOException, DaoException {
+	public boolean updateCancellation(String customerId, String insuranceId) throws IOException, RemoteException, DaoException {
 		for (int i = 0; i < this.contractList.size(); i++) {
 			if (this.contractList.get(i).getCustomerID().equals(customerId)
 					&& contractList.get(i).getInsuranceID().equals(insuranceId)) {
@@ -98,20 +99,25 @@ public class ContractListImpl implements ContractList, Remote {
 		}
 		return false; // exception
 	}
+	@Override
+	public void setResurrectFromCustomer(String customerID) throws RemoteException, DaoException {
+		for (Contract contract : contractList) {
+			if (contract.getCustomerID().equals(customerID)) {
+				contract.setResurrection(false);
+				contractDao.update(contract);
+			}
+		}
+	}
 
-//	public void setResurrectFromCustomer(Customer customer) {
-//		for (Contract contract : contractList) {
-//			if (contract.getCustomerID().equals(customer.getCustomerID()))
-//				contract.setResurrection(false);
-//		}
-//	}
-//
-//	public void setMaturityFromCustomer(Customer customer) {
-//		for (Contract contract : contractList) {
-//			if (contract.getCustomerID().equals(customer.getCustomerID()))
-//				contract.setMaturity(false);
-//		}
-//	}
+	@Override
+	public void setMaturityFromCustomer(String customerID) throws RemoteException, DaoException {
+		for (Contract contract : contractList) {
+			if (contract.getCustomerID().equals(customerID)) {
+				contract.setMaturity(false);
+				contractDao.update(contract);
+			}
+		}
+	}
 //
 //	public void setWheaterPaymentFromCustomer(Customer customer) {
 //		for (Contract contract : contractList) {
