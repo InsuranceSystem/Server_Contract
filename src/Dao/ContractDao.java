@@ -7,8 +7,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import Contract.Contract;
 import Exception.DaoException;
+import Interface.Contract;
+
 
 public class ContractDao extends Dao {
 

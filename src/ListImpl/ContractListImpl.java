@@ -1,4 +1,4 @@
-package Contract;
+package ListImpl;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,8 +14,11 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import Dao.ContractDao;
+import Exception.DaoException;
+import Interface.Contract;
+import Interface.ContractList;
 
-public class ContractListImpl implements ContractList, Remote{
+public class ContractListImpl implements ContractList, Remote {
 
 	private ArrayList<Contract> contractList;
 
@@ -85,7 +88,7 @@ public class ContractListImpl implements ContractList, Remote{
 		return null;
 	}
 
-	public boolean updateCancellation(String customerId, String insuranceId) throws IOException {
+	public boolean updateCancellation(String customerId, String insuranceId) throws IOException, DaoException {
 		for (int i = 0; i < this.contractList.size(); i++) {
 			if (this.contractList.get(i).getCustomerID().equals(customerId)
 					&& contractList.get(i).getInsuranceID().equals(insuranceId)) {
@@ -148,7 +151,7 @@ public class ContractListImpl implements ContractList, Remote{
 		return premiums;
 	}
 
-	public boolean update(Contract updatedContract) {
+	public boolean update(Contract updatedContract) throws DaoException {
 		for (int i = 0; i < this.contractList.size(); i++) {
 			Contract contract = (Contract) this.contractList.get(i);
 			if (contract.match(updatedContract.getInsuranceID(), updatedContract.getCustomerID())) {

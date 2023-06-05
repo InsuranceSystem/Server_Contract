@@ -7,19 +7,17 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import Contract.ContractListImpl;
-import Contract.PaymentListImpl;
+
 import Exception.CustomClassNotFoundException;
 import Exception.CustomConnectException;
 import Exception.CustomNotBoundException;
-import Interface.Contract_ServerIF;
-import Contract.ContractList;
-import Contract.PaymentList;
+import ListImpl.ContractListImpl;
+import ListImpl.PaymentListImpl;
+import Interface.ContractList;
+import Interface.PaymentList;
 
-public class ContractServer extends UnicastRemoteObject implements Contract_ServerIF {
+public class ContractServer extends UnicastRemoteObject {
 	private static final long serialVersionUID = 1L;
-	private static PaymentList PaymentList;
-	private static ContractList ContractList;
 
 	protected ContractServer() throws RemoteException {
 		super();
@@ -27,16 +25,26 @@ public class ContractServer extends UnicastRemoteObject implements Contract_Serv
 
 	public static void main(String[] args) throws Exception {
 		try {
-			Registry registry = LocateRegistry.createRegistry(1600);
-			ContractServer server = new ContractServer();
-			registry.rebind("ContractServer", server);
-			PaymentList = new PaymentListImpl();
-			ContractList = new ContractListImpl();
+			System.setProperty("java.security.policy", "policy.txt");
+			System.setSecurityManager(null);
+
+			PaymentList paymentList = new PaymentListImpl();
+			PaymentList stub = (PaymentList) UnicastRemoteObject.exportObject(paymentList, 0);
+			Registry registry1 = LocateRegistry.createRegistry(1303);
+			registry1.rebind("PaymentList", (Remote) stub);
+
+			// SurveyList 객체 등록
+			ContractList contractList = new ContractListImpl();
+			ContractList stub2 = (ContractList) UnicastRemoteObject.exportObject(contractList, 0);
+			Registry registry2 = LocateRegistry.createRegistry(1304);
+			registry2.rebind("ContractList", stub2);
 
 			System.out.println("Contract Server is ready !!!");
 
 		} catch (CustomNotBoundException e) {
 			System.out.println("Not bound exception occurred: " + e.getMessage());
+		} catch (RemoteException e) {
+			e.printStackTrace();
 		} catch (MalformedURLException e) {
 			System.out.println("MalformedURLException occurred: " + e.getMessage());
 		} catch (CustomConnectException e) {
@@ -46,16 +54,6 @@ public class ContractServer extends UnicastRemoteObject implements Contract_Serv
 		} catch (CustomClassNotFoundException | NoClassDefFoundError e) {
 			System.out.println("Class Found Error: " + e.getMessage());
 		}
-	}
-
-	@Override
-	public PaymentList getPaymentList() throws RemoteException {
-		return PaymentList;
-	}
-
-	@Override
-	public ContractList getContractList() throws RemoteException {
-		return ContractList;
 	}
 
 }

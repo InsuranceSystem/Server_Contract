@@ -1,8 +1,10 @@
-package Contract;
+package Interface;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Payment {
+public class Payment implements Serializable {
+    private static final long serialVersionUID = 1L;
 
 	private String customerID;
 	private String insuranceID;
